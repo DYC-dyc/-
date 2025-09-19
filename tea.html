@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>喜茶订单平台</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+
+  <style>
+    .finish {
+      text-decoration-line: line-through;
+      color: red;
+    }
+
+    .unfinished {
+      color: black;
+    }
+  </style>
+</head>
+
+<body>
+  <!--padding 内边距-->
+  <div class="jumbotron jumbotron-fluid bg-info text-white p-2">
+    <div class="container">
+      <h1 class="display-3">喜茶</h1>
+      <p class="lead">订单平台</p>
+    </div>
+  </div>
+
+  <div class="container-fluid" id="app">
+    <div class="row">
+      <!--饮品添加-->
+      <div class="col-md-6">
+        <div class="order-bg p-3">
+          <div class="card">
+
+            <div class="form-group">
+              <label for="">饮品</label>
+              <select class="form-control" v-model="drink">
+                <option v-for="(item,index) in drinks" :key="index" :value="item.title">{{item.title}}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="">杯型</label>
+              <div>
+                <div class="form-check form-check-inline" v-for="(item,index) in cups" :key="index">
+                  <input class="form-check-input" v-model="cup" type="radio" :value="item">
+                  <label class="form-check-label">{{item}}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="">甜度</label>
+              <div>
+                <div class="form-check form-check-inline" v-for="(item,index) in sugars" :key="index">
+                  <input class="form-check-input" v-model="sugar" type="radio" :value="item">
+                  <label class="form-check-label">{{item}}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="">温度</label>
+              <div>
+                <div class="form-check form-check-inline" v-for="(item,index) in temps" :key="index">
+                  <input class="form-check-input" v-model="temp" type="radio" :value="item">
+                  <label class="form-check-label">{{item}}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>配料</label>
+              <div>
+                <div class="form-check form-check-inline" v-for="(item,index) in opts" :key="index">
+                  <label class="form-check-label">
+                    <input class="form-check-input" v-model="opt" type="checkbox" :value="item">{{item}}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!--mt是与上文的间隔-->
+            <button type="button" @click="order()" class="btn btn-primary btn-lg btn-block mt-3">立即下单</button>
+          </div>
+        </div>
+      </div>
+
+      <!--表格-->
+      <div class="col-md-6">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>饮品</th>
+              <th>杯型</th>
+              <th>甜度</th>
+              <th>温度</th>
+              <th>配料</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item,index) in teaList" :key="index" :class="item.finish ? 'finish' : 'unfinished'">
+              <td scope="row">{{item.drink}}</td>
+              <td>{{item.cup}}</td>
+              <td>{{item.sugar}}</td>
+              <td>{{item.temp}}</td>
+              <td>
+                <span class="badge badge-pill badge-danger ml-2" v-for="(optitem,index) in item.opt"
+                  :key="index">{{optitem}}</span>
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary" @click="finish(item)">出货</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!--引用vue.js开发版本-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js">
+  </script>
+
+  <!--在vue里进行定义-->
+  <script>
+    let vm = new Vue({
+      el: "#app",
+      data: //数据
+      {
+        drinks: //饮品
+          [{ id: 0, title: "红茶" }, { id: 1, title: "绿茶" }, { id: 2, title: "喜茶" }],
+        cups:   //杯型
+          ["超大杯", "中杯", "小杯"],
+        sugars: //甜度
+          ["全糖", "七分糖", "半糖"],
+        temps:  //温度
+          ["多冰", "少冰", "常温"],
+        opts:   //配料
+          ['红豆', '珍珠', '椰果', '牛奶'],
+        drink: "1",
+        cup: "",
+        sugar: "",
+        temp: "",
+        opt: [],
+        teaList: []
+      },
+      methods: //下单
+      {
+        order: function () {
+          this.teaList.push({
+            drink: this.drink,
+            cup: this.cup,
+            sugar: this.sugar,
+            temp: this.temp,
+            opt: this.opt,
+            finish: false //false未出货 true出货
+          })
+        },
+        finish: function (item) {
+          item.finish = true; //已出货
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
